@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Banana</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #0b001a, #1a0033, #000000);
+        color: white;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+        transition: background 0.5s, color 0.5s;
+    }
+    body.light-mode {
+        background: #f0f0f0; color: #000;
+    }
+    body.light-mode .navbar {
+        background: rgba(255,255,255,0.9);
+    }
+    body.light-mode .navbar button {
+        color: #000; border-color: rgba(0,0,0,0.2); background-color: rgba(255,255,255,0.8);
+    }
+    body.light-mode .navbar button:hover { background-color: rgba(200,200,200,0.8); }
+    body.light-mode .website-card {
+        background: rgba(255,255,255,0.8); color: #000; border-color: rgba(0,0,0,0.1);
+    }
+    body.light-mode .website-card a { color: #0077cc; }
+
+    .navbar {
+        display: flex;
+        justify-content: flex-start;
+        padding: 15px 30px;
+        background: rgba(0,0,0,0.6);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .navbar button {
+        background-color: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.4);
+        color: white;
+        padding: 10px 20px;
+        margin-right: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 16px;
+    }
+    .navbar button:hover { background-color: rgba(255,255,255,0.15); }
+
+    .content { text-align: center; padding: 100px 20px; }
+    .content h1 { font-size: 48px; text-shadow: 2px 2px 12px rgba(255,0,255,0.6); }
+    .content p { font-size: 24px; text-shadow: 1px 1px 8px rgba(0,255,255,0.5); }
+    .extra-text {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 16px;
+        color: #ccc;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+    }
+
+    .websites { padding: 50px 20px; text-align: center; }
+    .websites h2 { font-size: 36px; margin-bottom: 10px; text-shadow: 2px 2px 10px rgba(255,255,0,0.5); }
+    .websites p.counter { font-size: 18px; margin-bottom: 30px; color: #ccc; }
+    .website-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+    .website-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 10px;
+        padding: 20px;
+        width: 250px;
+        text-align: center;
+        transition: 0.3s, background 0.5s, color 0.5s;
+        box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    }
+    .website-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(0,255,255,0.6);
+    }
+    .website-card img { width:80px; height:80px; margin-bottom:10px; border-radius:10px; }
+    .website-card h3 { margin-bottom: 10px; font-size: 22px; color: #fff; text-shadow: 0 0 6px rgba(255,0,255,0.6); }
+    .website-card a { color: #00ffff; text-decoration: none; font-size: 18px; transition: 0.3s; }
+    .website-card a:hover { text-shadow: 0 0 10px #00ffff; }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 200;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+        background-color: #111;
+        margin: 10% auto;
+        padding: 30px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+    }
+    .modal-content h2 { margin-bottom: 20px; }
+    .modal-content input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: none;
+    }
+    .modal-content button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #00ffff;
+        color: #000;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .close:hover { color: #fff; }
+</style>
+</head>
+<body>
+<div class="navbar">
+    <button>Home</button>
+    <button onclick="toggleMode()">Settings</button>
+    <button onclick="openModal()">Profile</button>
+    <button onclick="document.getElementById('websites').scrollIntoView()">Proxy Websites</button>
+</div>
+
+<div class="content">
+    <h1>Project Banana</h1>
+    <p>Proxy Websites (BETA)</p>
+    <div class="extra-text">Also all of these work in lightspeed I get in this IP every month</div>
+</div>
+
+<div class="websites" id="websites">
+    <h2>Websites for lazy people</h2>
+    <p class="counter">Currently 15 Proxy Websites available</p>
+    <div class="website-list">
+
+        <!-- Website cards -->
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Doge Logo">
+            <h3>Doge</h3>
+            <a href="https://chemistry.jobvn.com" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Jordan’s Math Homework Logo">
+            <h3>Jordan’s Math Homework</h3>
+            <a href="https://math.ezsearch.lol.cdn.cloudflare.net" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Netflix Logo">
+            <h3>Netflix</h3>
+            <a href="https://docs.google.com/presentation/d/149GpUX0v2xNpwbUTv0Ra1bXSBJ8VImN3yQXMYA9ZhKA/mobilepresent?slide=id.g3390e1e779d_159_192" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Shadow Logo">
+            <h3>Shadow</h3>
+            <a href="https://104.243.38.18.ip.addr.tools" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Utopia Logo">
+            <h3>Utopia</h3>
+            <a href="https://104.218.50.66.ip.addr.tools" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Crunchyroll Logo">
+            <h3>Crunchyroll</h3>
+            <a href="https://docs.google.com/presentation/d/11emRJ473ihU1R5lKucb1e9xJDbHy4-myZBw3sMzBiac/mobilepresent?slide=id.g34f68dffc46_0_0" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Disney+ Logo">
+            <h3>Disney+</h3>
+            <a href="https://docs.google.com/presentation/d/1cqMoS7rNvOX77938GusdWNi6mYVPOfETCVsAVW9I9ps/mobilepresent?slide=id.g2caa1804f1f_0_71" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Anime Logo">
+            <h3>Anime</h3>
+            <a href="https://aniversehd.com" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Cat-Nitro Logo">
+            <h3>Cat-Nitro</h3>
+            <a href="https://kugelfoods.com/main.html" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Platinum Logo">
+            <h3>Platinum</h3>
+            <a href="https://d3jtaq7z8njy0d.cloudfront.net/games/index.html" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Forgie’s Arcade Logo">
+            <h3>Forgie’s Arcade</h3>
+            <a href="https://frogiesarcade.win.cdn.cloudflare.net" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Boredom V2 Logo">
+            <h3>Boredom V2</h3>
+            <a href="https://152.53.136.204.ip.addr.tools" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="DayDream X Logo">
+            <h3>DayDream X</h3>
+            <a href="https://a7b9c1.ddx.blocksi.lol.cdn.cloudflare.net" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Truffled Logo">
+            <h3>Truffled</h3>
+            <a href="https://89.58.12.243.ip.addr.tools" target="_blank">Visit Site</a>
+        </div>
+
+        <div class="website-card">
+            <img src="LOGO_URL_HERE" alt="Math Lesson Monster Logo">
+            <h3>Math Lesson Monster</h3>
+            <a href="https://quiz-20.biz" target="_blank">Visit Site</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Profile</h2>
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+    <button>Login</button>
+    <button>Sign Up</button>
+  </div>
+</div>
+
+<script>
+    function toggleMode() {
+        document.body.classList.toggle('light-mode');
+    }
+
+    function openModal() {
+        document.getElementById('profileModal').style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById('profileModal').style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('profileModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
